@@ -60,7 +60,7 @@ class Home extends Component {
                     errMess={this.props.partners.errMess}
                 />
 			</ScrollView>
-		)
+		);
 	}
 }
 

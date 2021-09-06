@@ -17,7 +17,7 @@ class Contact extends Component {
 					<Text>Email: campsites@nucamp.co</Text>
 				</Card>
 			</ScrollView>
-		)
+		);
 	}
 }
 

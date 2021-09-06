@@ -145,7 +145,7 @@ const CustomDrawerContentComponent = (props) => (
 			<DrawerItems {...props} />
 		</SafeAreaView>
 	</ScrollView>
-)
+);
 
 const MainNavigator = createDrawerNavigator(
 	{
@@ -206,26 +206,12 @@ class Main extends Component {
 				style={{
 					flex: 1,
 					paddingTop: Platform.OS === "ios" ? 0 : Constants.statusBarHeight,
-				}}
-			>
+				}}>
 				<AppNavigator />
 			</View>
-		)
+		);
 	}
 }
-
-// class Main extends Component {
-// 	constructor(props) {
-// 		super(props)
-// 		this.state = {
-// 			campsites: CAMPSITES,
-// 		}
-// 	}
-
-// 	render() {
-// 		return <Directory campsites={this.state.campsites} />
-// 	}
-// }
 
 const styles = StyleSheet.create({
 	container: {
