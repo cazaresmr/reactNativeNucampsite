@@ -7,7 +7,9 @@ import {
 	Modal,
 	Button,
 	StyleSheet,
-} from "react-native";
+	Alert,
+	PanResponder,
+} from "react-native"
 import { Card, Icon, Rating, Input } from "react-native-elements";
 import { connect } from "react-redux";
 import { baseUrl } from "../shared/baseUrl";
@@ -32,43 +34,72 @@ const mapDispatchToProps = {
 };
 
 function RenderCampsite(props) {
-	const { campsite } = props;
+	const { campsite } = props
+
+	const recognizeDrag = ({ dx }) => (dx < -200 ? true : false)
+
+	const panResponder = PanResponder.create({
+		onStartShouldSetPanResponder: () => true,
+		onPanResponderEnd: (e, gestureState) => {
+			console.log("pan responder end", gestureState)
+			if (recognizeDrag(gestureState)) {
+				Alert.alert(
+					"Add Favorite",
+					"Are you sure you wish to add " + campsite.name + " to favorites?",
+					[
+						{
+							text: "Cancel",
+							style: "cancel",
+							onPress: () => console.log("Cancel Pressed"),
+						},
+						{
+							text: "OK",
+							onPress: () =>
+								props.favorite ? console.log("Already set as a favorite") : props.markFavorite(),
+						},
+					],
+					{ cancelable: false }
+				)
+			}
+			return true
+		},
+	})
 
 	if (campsite) {
 		return (
-            <Animatable.View animation='fadeInDown' duration={2000} delay={1000}>
-			<Card
-				featuredTitle={campsite.name}
-				image={{ uri: baseUrl + campsite.image }}>
-
-				<Text style={{ margin: 10 }}>{campsite.description}</Text>
-				<View style={styles.cardRow}>
-					<Icon
-						name={props.favorite ? "heart" : "heart-o"}
-						type="font-awesome"
-						color="#f50"
-						raised
-						reverse
-						onPress={() =>
-							props.favorite
-							? console.log("Already set as a favorite")
-							: props.markFavorite()
-						}
-					/>
-					<Icon
-						name="pencil"
-						type='font-awesome'
-						color='#5637DD'
-						raised
-						reverse
-						onPress={() => props.onShowModal()}
-					/>
-				</View>
-			</Card>
+			<Animatable.View
+				animation='fadeInDown'
+				duration={2000}
+				delay={1000}
+				{...panResponder.panHandlers}
+			>
+				<Card featuredTitle={campsite.name} image={{ uri: baseUrl + campsite.image }}>
+					<Text style={{ margin: 10 }}>{campsite.description}</Text>
+					<View style={styles.cardRow}>
+						<Icon
+							name={props.favorite ? "heart" : "heart-o"}
+							type='font-awesome'
+							color='#f50'
+							raised
+							reverse
+							onPress={() =>
+								props.favorite ? console.log("Already set as a favorite") : props.markFavorite()
+							}
+						/>
+						<Icon
+							name='pencil'
+							type='font-awesome'
+							color='#5637DD'
+							raised
+							reverse
+							onPress={() => props.onShowModal()}
+						/>
+					</View>
+				</Card>
 			</Animatable.View>
-		);
+		)
 	}
-	return <View />;
+	return <View />
 }
 
 function RenderComments({ comments }) {
